@@ -34,7 +34,7 @@ SmartPtr<T>::SmartPtr()
 }
 
 template<class T>
-SmartPtr<T>::SmartPtr(const T &value)
+SmartPtr<T>::SmartPtr(const T& value)
 {
     this->ptr = new T(value);
     this->addToDict();
@@ -43,6 +43,7 @@ SmartPtr<T>::SmartPtr(const T &value)
 template<class T>
 SmartPtr<T>::~SmartPtr()
 {
+    std::cout<<"\n<freeing memory emplacement "<<this->ptr<<">\n"<<std::endl;
     delete(this->ptr);
     this->removeFromDict();
 }
@@ -90,7 +91,6 @@ void SmartPtr<T>::removeFromDict()
         {
             e.first->setPtr(nullptr);
             SmartPtr::smartPtrs.erase(SmartPtr::smartPtrs.find(e.first));
-            std::cout<<"\ndeallocated and removed "<<e.first<<"\n"<<std::endl;
         }   
     }
 }
