@@ -30,5 +30,4 @@ int main()
         smartPtr.setPtr(ptr);
     }
     std::cout<<"value of ptr is : "<<smartPtr.getPtr()<<std::endl;
-    std::cout<<"pointed value of ptr is : "<<smartPtr.getPtr()->a<<"\t"<<smartPtr.getPtr()->b<<std::endl;
 }

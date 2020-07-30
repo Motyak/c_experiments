@@ -12,7 +12,7 @@ class SmartPtr
 
     void addToDict();
     void updateDict();
-    // void removeFromDict();
+    void removeFromDict();
 
   public:
     SmartPtr();
@@ -44,10 +44,7 @@ template<class T>
 SmartPtr<T>::~SmartPtr()
 {
     delete(this->ptr);
-    // this->ptr = nullptr;
-    // faire en sorte que tous les autres smart pointers pointant vers 
-    // cette espace mémoire soit mis à nullptr.
-    // this->removeFromDict();
+    this->removeFromDict();
 }
 
 template<class T>
@@ -84,18 +81,18 @@ void SmartPtr<T>::updateDict()
     SmartPtr::smartPtrs[this] = this->ptr;
 }
 
-// template<class T>
-// void SmartPtr<T>::removeFromDict()
-// {
-//     // chaque element du dict contenant cette valeur devra être détruit
-//     for(auto const& e : SmartPtr.smartPtrs)
-//     {
-//         if(e.second == this->ptr)
-//         {
-//             e.first.setPtr(nullptr);
-//             SmartPtr.smartPtrs.erase(SmartPtr.smartPtrs.find(e));
-//         }   
-//     }
-// }
+template<class T>
+void SmartPtr<T>::removeFromDict()
+{
+    for(auto const& e : SmartPtr::smartPtrs)
+    {
+        if(e.second == this->ptr)
+        {
+            e.first->setPtr(nullptr);
+            SmartPtr::smartPtrs.erase(SmartPtr::smartPtrs.find(e.first));
+            std::cout<<"\ndeallocated and removed "<<e.first<<"\n"<<std::endl;
+        }   
+    }
+}
 
 #endif
