@@ -11,7 +11,7 @@ class SmartPtr
     static std::map<SmartPtr<T>*,T*> smartPtrs;
 
     void addToDict();
-    // void updateDict();
+    void updateDict();
     // void removeFromDict();
 
   public:
@@ -60,12 +60,14 @@ template<class T>
 void SmartPtr<T>::setPtr(T* addr)
 {
     this->ptr = addr;
+    this->updateDict();
 }
 
 template<class T>
 void SmartPtr<T>::setPtr(SmartPtr<T>& ptr)
 {
     this->ptr = ptr.getPtr();
+    this->updateDict();
 }
 
 template<class T>
@@ -75,11 +77,12 @@ void SmartPtr<T>::addToDict()
     std::cout<<"\n<added "<<this<<" to dict>\n"<<std::endl;
 }
 
-// template<class T>
-// void SmartPtr<T>::updateDict()
-// {
-//     SmartPtr.smartPtrs[this] = this->ptr;
-// }
+template<class T>
+void SmartPtr<T>::updateDict()
+{
+    std::cout<<"\n<updating "<<this<<" from "<<smartPtrs[this]<<" to "<<this->ptr<<">\n"<<std::endl;
+    SmartPtr::smartPtrs[this] = this->ptr;
+}
 
 // template<class T>
 // void SmartPtr<T>::removeFromDict()
