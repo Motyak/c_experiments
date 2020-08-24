@@ -1,6 +1,5 @@
 #include <iostream>
 #include <array>
-#include <utility>
 
 template <class InputIterator, class Function>
 void foreach(InputIterator first, InputIterator last, Function fn)
@@ -25,17 +24,3 @@ int main()
         std::cout<<e<<std::endl;
     std::cout<<str<<std::endl;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
