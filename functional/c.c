@@ -12,7 +12,6 @@ struct container_t
 };
 
 typedef void* generic_t;
-typedef void* container_t;
 
 /* returns the updated accumulator based on current */
 typedef generic_t (*reducer_t)(generic_t accumulator, generic_t current);
@@ -21,10 +20,12 @@ generic_t reduce(reducer_t reducer, generic_t initial, struct container_t contai
 {
     generic_t acc = initial;
     size_t length = container.size / container.itemsize;
-    int* curr = NULL;
+    void** curr = NULL;
     for (int i = 0; i < length; ++i)
     {
         curr = container.items + i * container.itemsize;
+        printf("DEBUG: %d\n", acc);
+        printf("DEBUG: %d\n", *curr);
         acc = reducer(acc, *curr);
     }
     return acc;
@@ -51,7 +52,7 @@ int main()
         int arr[] = { 1, 2, 3 };
         struct container_t container = {arr, sizeof(arr), sizeof(int)};
         generic_t res = reduce(reducer, 0, container);
-        printf("%d\n", res);
+        // printf("%d\n", res);
     }
     
     // {
