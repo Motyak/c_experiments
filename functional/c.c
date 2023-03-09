@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define len(x) (sizeof(x)/sizeof(x[0]))
 
@@ -24,8 +25,6 @@ generic_t reduce(reducer_t reducer, generic_t initial, struct container_t contai
     for (int i = 0; i < length; ++i)
     {
         curr = container.items + i * container.itemsize;
-        printf("DEBUG: %d\n", acc);
-        printf("DEBUG: %d\n", *curr);
         acc = reducer(acc, *curr);
     }
     return acc;
@@ -36,31 +35,32 @@ const int add(const int a, const int b)
     return a + b;
 }
 
-// const char* concat(const char* a, const char* b)
-// {
-//     char res[strlen(a) + strlen(b)];
-//     strcpy(res, a);
-//     strcat(res, b);
-//     return res;
-// }
+const char* concat(const char* a, const char b)
+{
+    char input[2] = {b, '\0'};
+    size_t length = strlen(a) + 1;
+    char* res = malloc(length * sizeof(char));
+    strcpy(res, a);
+    strcat(res, input);
+    return res;
+}
 
 
 int main()
 {
     {
-        reducer_t reducer = add;
+        reducer_t reducer = (reducer_t)add;
         int arr[] = { 1, 2, 3 };
         struct container_t container = {arr, sizeof(arr), sizeof(int)};
         generic_t res = reduce(reducer, 0, container);
-        // printf("%d\n", res);
+        printf("%ld\n", ((intptr_t)res));
     }
     
-    // {
-    //     reducer_t reducer = concat;
-    //     char str[] = "ommy";
-    //     // struct container_t container = {str, sizeof(str), sizeof(char)};
-    //     struct container_t container = {str, sizeof(str) - sizeof('\0'), sizeof(char)};
-    //     generic_t res = reduce(reducer, "T", container);
-    //     printf("%s\n", res);
-    // }
+    {
+        reducer_t reducer = (reducer_t)concat;
+        char str[] = "ommy";
+        struct container_t container = {str, sizeof(str) - sizeof(char), sizeof(char)};
+        generic_t res = reduce(reducer, "T", container);
+        printf("%s\n", (char*)res);
+    }
 }
