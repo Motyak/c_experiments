@@ -16,36 +16,10 @@
 #define WARNING(msg, ...) \
     TRACE("WARN", msg, ##__VA_ARGS__);
 
-void allocate(int** variable) {
-    if (*variable) {
-        free(*variable); // avoids memory leaks (losing possibility to free memory)
-    }
-    *variable = malloc(sizeof(int));
-}
-
-void unallocate(int** variable) {
-    if (!*variable) {
-        WARNING("Tried to unallocate an already unallocated variable");
-        return;
-    }
-    free(*variable);
-    *variable = NULL; // avoids dangling pointer (pointing to freed data)
-}
-
-void assign(int* variable, int value) {
-    if (!variable) {
-        ERROR("Could not assign value %d to unallocated variable", value);
-    }
-    *variable = value;
-}
-
-void print(const int* variable) {
-    printf("%p", variable);
-    if (variable) {
-        printf(";%d", *variable);
-    }
-    printf("\n\n");
-}
+void allocate(int**);
+void unallocate(int**);
+void assign(int*, int);
+void print(const int*);
 
 int main()
 {
@@ -62,5 +36,36 @@ int main()
     printf("unallocate \n");
     unallocate(&number);
     print(number);
+}
+
+void allocate(int** const variable) {
+    if (*variable) {
+        free(*variable); // avoids memory leaks (losing possibility to free memory)
+    }
+    *variable = malloc(sizeof(int));
+}
+
+void unallocate(int** const variable) {
+    if (!*variable) {
+        WARNING("Tried to unallocate an already unallocated variable");
+        return;
+    }
+    free(*variable);
+    *variable = NULL; // avoids dangling pointer (pointing to freed data)
+}
+
+void assign(int* const variable, const int value) {
+    if (!variable) {
+        ERROR("Could not assign value %d to unallocated variable", value);
+    }
+    *variable = value;
+}
+
+void print(const int* const variable) {
+    printf("%p", variable);
+    if (variable) {
+        printf(";%d", *variable);
+    }
+    printf("\n\n");
 }
 
