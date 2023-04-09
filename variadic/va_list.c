@@ -1,7 +1,8 @@
-#include <iostream>
-#include <cstdarg>
+#include <stdio.h>
+#include <stdarg.h>
 
-int add(int a, int b, ...) {
+#define add(...) add(__VA_ARGS__, 0);
+int (add)(int a, int b, ...) {
     va_list args;
     va_start(args, b);
     
@@ -19,6 +20,6 @@ int add(int a, int b, ...) {
 // g++ --std=c++11 va_arg.cpp -o va_arg
 int main()
 {
-    int res = add(3, 2, 4, 0);
-    std::cout << res << std::endl;
+    int res = add(1, 2, 3, 4, 5);
+    printf("%d\n", res);
 }
