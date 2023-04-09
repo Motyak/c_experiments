@@ -30,12 +30,12 @@ generic_t reduce(reducer_t reducer, generic_t initial, struct container_t contai
     return acc;
 }
 
-const int add(const int a, const int b)
+int add(int a, int b)
 {
     return a + b;
 }
 
-const char* concat(const char* a, const char b)
+char* concat(const char* a, char b)
 {
     char input[2] = {b, '\0'};
     size_t length = strlen(a) + 1;
@@ -53,7 +53,7 @@ int main()
         int arr[] = { 1, 2, 3 };
         struct container_t container = {arr, sizeof(arr), sizeof(int)};
         generic_t res = reduce(reducer, 0, container);
-        printf("%ld\n", ((intptr_t)res));
+        printf("%ld\n", (uintptr_t)res);
     }
     
     {
