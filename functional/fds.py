@@ -32,3 +32,12 @@ print(res) # ['abc', 'abcde']
 capital_letters = build_filterer(lambda char: char.isupper())
 res = capital_letters("Tommy")
 print(res) # ['T']
+
+def pipe(*functions):
+    def inner(f, g):
+        return lambda x: g(f(x)) # apply functions from left to right
+    return reduce(inner, lambda x: x, functions)
+
+incThenDouble = pipe(lambda x: x+1, lambda x: x*2)
+res = incThenDouble(10)
+print(res) # 22
