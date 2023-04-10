@@ -33,6 +33,13 @@ capital_letters = build_filterer(lambda char: char.isupper())
 res = capital_letters("Tommy")
 print(res) # ['T']
 
+def map(fn, list):
+    reducer = lambda acc, item: [*acc, fn(item)]
+    return reduce(reducer, [], list)
+
+res = map(lambda x: 2*x, [1, 2, 3])
+print(res) # [2, 4, 6]
+
 def pipe(*functions):
     def inner(f, g):
         return lambda x: g(f(x)) # apply functions from left to right
