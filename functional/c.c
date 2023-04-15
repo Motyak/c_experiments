@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define len(x) (sizeof(x)/sizeof(x[0]))
 
@@ -45,6 +46,10 @@ char* concat(const char* a, char b)
     return res;
 }
 
+bool or(bool a, bool b)
+{
+    return a | b;
+}
 
 int main()
 {
@@ -62,5 +67,13 @@ int main()
         struct container_t container = {str, sizeof(str) - sizeof(char), sizeof(char)};
         generic_t res = reduce(reducer, "T", container);
         printf("%s\n", (char*)res);
+    }
+
+    {
+        reducer_t reducer = (reducer_t)or;
+        bool arr[] = { false, true, true };
+        struct container_t container = {arr, sizeof(arr), sizeof(bool)};
+        generic_t res = reduce(reducer, false, container);
+        printf("%s\n", (uintptr_t)res? "true" : "false");
     }
 }
