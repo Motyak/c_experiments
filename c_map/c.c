@@ -9,7 +9,7 @@ int main()
     char str1[] = "tommy";
     char* str2 = "motyak";
 
-    char** map = malloc(2 * sizeof(str2));
+    char** map = malloc(2 * sizeof(char*));
     *map = str1;
     *(map + 1) = str2;
 
