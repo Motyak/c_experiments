@@ -64,6 +64,7 @@ struct container_t filter(predicate_t pred, struct container_t input)
     reducer_t reducer = (reducer_t)update;
     setup_update_function(pred);
     struct container_t* acc = malloc(sizeof(struct container_t));
+    assert(acc != NULL); // malloc can fail
     *acc = (struct container_t){NULL, 0, input.itemsize};
     return *(struct container_t*)reduce(reducer, acc, input);
 
