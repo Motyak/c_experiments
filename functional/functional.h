@@ -24,7 +24,7 @@ generic_t reduce(reducer_t reducer, generic_t initial, struct container_t input)
     generic_t acc = initial;
     size_t length = input.size / input.itemsize;
     void** curr = NULL;
-    for (int i = 0; i < length; ++i)
+    for (size_t i = 0; i < length; ++i)
     {
         curr = input.items + i * input.itemsize;
         acc = reducer(acc, *curr);
