@@ -21,7 +21,7 @@ int main()
         struct container_t res = filter(predicate, input);
         for (size_t i = 0; i < res.size / res.itemsize; ++i)
         {
-            printf("%d", ((int*)res.items)[i]);
+            printf("%d ", ((int*)res.items)[i]); // 1 3
         }
         printf("\n");
     }
@@ -33,7 +33,7 @@ int main()
         struct container_t res = filter(predicate, input);
         for (size_t i = 0; i < res.size / res.itemsize; ++i)
         {
-            printf("%c", ((char*)res.items)[i]);
+            printf("%c", ((char*)res.items)[i]); // sleep
         }
         printf("\n");
 
@@ -41,7 +41,7 @@ int main()
         res = filter(predicate, res);
         for (size_t i = 0; i < res.size / res.itemsize; ++i)
         {
-            printf("%c", ((char*)res.items)[i]);
+            printf("%c", ((char*)res.items)[i]); // see
         }
         printf("\n");
     }
