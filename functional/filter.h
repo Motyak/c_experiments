@@ -1,36 +1,10 @@
-#include <stdlib.h>
+#include "reduce.h"
+
 #include <stdbool.h>
 #include <assert.h>
+#include <string.h>
 
 #include <stdio.h> // debug
-
-struct container_t
-{
-    void* items;
-    size_t size;
-    size_t itemsize;
-};
-
-typedef void* generic_t;
-/* When multiple generic type parameters in a function signature BUT not necessarily the same */
-typedef generic_t generic__A;
-typedef generic_t generic__B;
-
-/* returns the updated accumulator based on current */
-typedef generic__A (*reducer_t)(generic__A accumulator, generic__B current);
-
-generic_t reduce(reducer_t reducer, generic_t initial, struct container_t input)
-{
-    generic_t acc = initial;
-    size_t length = input.size / input.itemsize;
-    void** curr = NULL;
-    for (size_t i = 0; i < length; ++i)
-    {
-        curr = input.items + i * input.itemsize;
-        acc = reducer(acc, *curr);
-    }
-    return acc;
-}
 
 typedef bool (*predicate_t)(generic_t);
 
@@ -46,17 +20,24 @@ static void setup_update_function(predicate_t pred)
 
 struct container_t* update(struct container_t* list, generic_t curr)
 {
-    assert(g_update__predicate != NULL); // prevent potential undefined behavior
+    struct container_t* res = malloc(sizeof(struct container_t));
+    *res = *list;
+    
+    assert(g_update__predicate != NULL);
     predicate_t pred = g_update__predicate;
     if (pred(curr))
     {
-        void** new_elements = realloc(list, list->size + list->itemsize);
-        assert(new_elements != NULL); // realloc can fail
-        *(new_elements + list->size) = curr;
-        list->items = new_elements;
-        list->size += list->itemsize;
+        size_t new_size = list->size + list->itemsize;
+        void** new_items = malloc(new_size);
+        memcpy(new_items, list->items, list->size);
+        // this statement assumes item size of 8 bytes (void*), i'd rather use list->itemsize to allow int instead of llong
+        *(new_items + list->size / list->itemsize) = curr;
+        res->items = new_items;
+        res->size = new_size;
+        res->itemsize = list->itemsize;
     }
-    return list;
+    
+    return res;
 }
 
 struct container_t filter(predicate_t pred, struct container_t input)

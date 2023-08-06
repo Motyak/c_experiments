@@ -17,6 +17,7 @@ print(res) # 6
 res = reduce(add, 'T', "ommy")
 print(res) # Tommy
 
+####################################################################################
 
 def filter(pred, inputList):
     update = lambda list, curr: [*list, curr] if pred(curr) else list
@@ -33,12 +34,16 @@ capital_letters = build_filterer(lambda char: char.isupper())
 res = capital_letters("Tommy")
 print(res) # ['T']
 
+####################################################################################
+
 def map(fn, list):
     reducer = lambda acc, item: [*acc, fn(item)]
     return reduce(reducer, [], list)
 
 res = map(lambda x: 2*x, [1, 2, 3])
 print(res) # [2, 4, 6]
+
+####################################################################################
 
 def pipe(*functions):
     def inner(f, g):

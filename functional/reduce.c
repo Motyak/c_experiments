@@ -1,8 +1,9 @@
-#include "functional.h"
+#include "reduce.h"
 
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 int add(int a, int b)
 {
