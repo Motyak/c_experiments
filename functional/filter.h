@@ -28,10 +28,9 @@ struct container_t* update(struct container_t* list, generic_t curr)
     if (pred(curr))
     {
         size_t new_size = list->size + list->itemsize;
-        void** new_items = malloc(new_size);
+        char* new_items = malloc(new_size);
         memcpy(new_items, list->items, list->size);
-        // this statement assumes item size of 8 bytes (void*), i'd rather use list->itemsize to allow int instead of llong
-        *(new_items + list->size / list->itemsize) = curr;
+        *(new_items + list->size) = curr;
         res->items = new_items;
         res->size = new_size;
         res->itemsize = list->itemsize;

@@ -25,25 +25,23 @@ bool not_zero(int a)
     return a != 0;
 }
 
-#define llong long long
-
 int main()
 {
     predicate_t pred = (predicate_t)not_zero;
     setup_update_function(pred);
     
     struct container_t* init = malloc(sizeof(struct container_t));
-    *init = (struct container_t){NULL, 0, sizeof(llong)};
-    llong list[] = {1, 0, 2, 3};
+    *init = (struct container_t){NULL, 0, sizeof(int)};
+    int list[] = {1, 0, 2, 3};
     struct container_t* res = malloc(sizeof(struct container_t));
     *res = *init;
     for (int i = 0; i < 4; ++i)
     {
         printf("%d    ", list[i]);
         res = update(res, list[i]);
-        printf("%d %d %d\n", ((llong*)res->items)[0], ((llong*)res->items)[1], ((llong*)res->items)[2]);
+        printf("%d %d %d\n", ((int*)res->items)[0], ((int*)res->items)[1], ((int*)res->items)[2]);
     }
-    printf("%d %d %d\n", ((llong*)res->items)[0], ((llong*)res->items)[1], ((llong*)res->items)[2]);
+    printf("%d %d %d\n", ((int*)res->items)[0], ((int*)res->items)[1], ((int*)res->items)[2]);
 }
 
 
