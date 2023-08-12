@@ -2,11 +2,17 @@
 
 #include <stdbool.h>
 #include <assert.h>
+#include <stdarg.h>
 #include <string.h>
 
 #include <stdio.h> // debug
 
 typedef bool (*predicate_t)(generic_t);
+typedef struct container_t (*filterer_t)(struct container_t input);
+
+#define FILTERER_MAX_LENGTH 10
+static predicate_t* g_filterer = NULL;
+static int g_filterer_length = 0;
 
 // global variable used by update function, set by setup_update_function function
 static predicate_t g_update__predicate = NULL;
@@ -46,4 +52,61 @@ struct container_t filter(predicate_t pred, struct container_t input)
     struct container_t* acc = malloc(sizeof(struct container_t));
     *acc = (struct container_t){NULL, 0, input.itemsize};
     return *(struct container_t*)reduce(reducer, acc, input);
+}
+
+// temporary hack to bypass pred check in update (force update)
+static bool always_true(generic_t _)
+{
+    return true;
+}
+
+static struct container_t execute(struct container_t input)
+{
+    assert(g_filterer != NULL);
+    // hack to force upcoming updates
+    setup_update_function(always_true);
+
+    struct container_t* res = malloc(sizeof(struct container_t));
+    *res = (struct container_t){NULL, 0, input.itemsize};
+    size_t length = input.size / input.itemsize;
+    void** curr = NULL;
+    for (size_t i = 0; i < length; ++i)
+    {
+        bool acc = true;
+        for (int i = 0; i < g_filterer_length; ++i)
+        {
+            acc &= g_filterer[i](*curr);
+        }
+
+        // if all predicates returned true
+        if (acc)
+        {
+            // printf("%c\n", (char)*curr);
+            res = (struct container_t*)update(res, *curr);
+        }
+    }
+
+    return *res;
+}
+
+#define build_filterer(...) build_filterer(__VA_ARGS__, NULL);
+filterer_t (build_filterer)(predicate_t pred_a, predicate_t pred_b, ...)
+{
+    if (g_filterer == NULL)
+        g_filterer = malloc(sizeof(predicate_t) * FILTERER_MAX_LENGTH);
+    g_filterer_length = 0;
+    
+    va_list args;
+    va_start(args, pred_b);
+    g_filterer[g_filterer_length++] = pred_a;
+    predicate_t curr_pred = pred_b;
+    while (curr_pred != NULL)
+    {
+        assert(g_filterer_length <= FILTERER_MAX_LENGTH);
+        g_filterer[g_filterer_length++] = curr_pred;
+        curr_pred = va_arg(args, predicate_t);
+    }
+    va_end(args);
+
+    return execute;
 }

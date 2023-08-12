@@ -27,22 +27,31 @@ int main()
     }
 
     {
-        predicate_t predicate = (predicate_t)is_lowercase;
         char str[] = "Asleep_";
         struct container_t input = {str, sizeof(str), sizeof(char)};
-        struct container_t res = filter(predicate, input);
-        for (size_t i = 0; i < res.size / res.itemsize; ++i)
-        {
-            printf("%c", ((char*)res.items)[i]); // sleep
-        }
-        printf("\n");
+        predicate_t pred = (predicate_t)is_lowercase;
+        filterer_t filterer = build_filterer(pred);
 
-        predicate = (predicate_t)is_odd;
-        res = filter(predicate, res);
-        for (size_t i = 0; i < res.size / res.itemsize; ++i)
-        {
-            printf("%c", ((char*)res.items)[i]); // see
-        }
-        printf("\n");
+        struct container_t res = filterer(input);
+        // for (size_t i = 0; i < res.size / res.itemsize; ++i)
+        // {
+        //     printf("%c", ((char*)res.items)[i]); // sleep
+        // }
+        // printf("\n");
     }
+
+    // {
+    //     char str[] = "Asleep_";
+    //     struct container_t input = {str, sizeof(str), sizeof(char)};
+    //     predicate_t pred_a = (predicate_t)is_lowercase;
+    //     predicate_t pred_b = (predicate_t)is_odd;
+    //     filterer_t filterer = build_filterer(pred_a, pred_b);
+
+        // struct container_t res = filterer(input);
+        // for (size_t i = 0; i < res.size / res.itemsize; ++i)
+        // {
+        //     printf("%c", ((char*)res.items)[i]); // see
+        // }
+        // printf("\n");
+    // }
 }
