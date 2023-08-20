@@ -24,7 +24,7 @@ static void setup_update_function(predicate_t pred)
     g_update__predicate = pred;
 }
 
-struct container_t* update(struct container_t* list, generic_t curr)
+static struct container_t* update(struct container_t* list, generic_t curr)
 {
     struct container_t* res = malloc(sizeof(struct container_t));
     *res = *list;
@@ -72,6 +72,7 @@ static struct container_t execute(struct container_t input)
     void** curr = NULL;
     for (size_t i = 0; i < length; ++i)
     {
+        curr = input.items + i * input.itemsize;
         bool acc = true;
         for (int i = 0; i < g_filterer_length; ++i)
         {
@@ -81,7 +82,6 @@ static struct container_t execute(struct container_t input)
         // if all predicates returned true
         if (acc)
         {
-            // printf("%c\n", (char)*curr);
             res = (struct container_t*)update(res, *curr);
         }
     }
