@@ -19,8 +19,10 @@ int main()
     Vector_push_back(vec, &val2);
     Vector_push_back(vec, &val2);
 
-    Vector_push_back(vec, &val2);
+    int val3 = 777;
+    Vector_push_back(vec, &val3);
+    ret = Vector_get(vec, 4);
+    printf("%d\n", *ret);
 
     Vector_delete(vec);
-    
 }

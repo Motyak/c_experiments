@@ -7,11 +7,10 @@ struct Vector
 {
     void* arr;
     size_t size;
-    size_t itemsize;
     size_t capacity;
 };
 
-struct Vector* Vector_new(size_t itemsize);
+struct Vector* Vector_new();
 void Vector_delete(struct Vector* vec);
 
 void Vector_push_back(struct Vector* self, void* new_item);
