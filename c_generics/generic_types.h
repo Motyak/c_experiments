@@ -40,12 +40,30 @@ Int Int_from_ptr(const int* ptr)
 float
 ************************************************************/
 
-float float_from_scalar(float scalar)
+static float* floatptr_from_scalar(float scalar)
+{
+    float* ptr = malloc(sizeof(float));
+    *ptr = scalar;
+    return ptr;
+}
+
+static float* floatptr_from_ptr(float* ptr)
+{
+    return ptr;
+}
+
+#define floatptr_from(X) _Generic((X), \
+    float: floatptr_from_scalar, \
+    float*: floatptr_from_ptr, \
+    default: floatptr_from_scalar \
+    )(X)
+
+static float float_from_scalar(float scalar)
 {
     return scalar;
 }
 
-float float_from_ptr(const float* ptr)
+static float float_from_ptr(const float* ptr)
 {
     return *ptr;
 }
