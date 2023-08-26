@@ -9,7 +9,7 @@ enum Type {
 };
 
 /************************************************************
-int
+Int
 ************************************************************/
 
 typedef struct {
@@ -20,12 +20,12 @@ typedef struct {
     enum Type type;
 } Int;
 
-Int Int_from_scalar(int scalar)
+static Int Int_from_scalar(int scalar)
 {
     return (Int){ .scalar=scalar, Type_SCALAR };
 }
 
-Int Int_from_ptr(const int* ptr)
+static Int Int_from_ptr(const int* ptr)
 {
     return (Int){ .ptr=ptr, Type_PTR };
 }
@@ -37,42 +37,8 @@ Int Int_from_ptr(const int* ptr)
     )(X)
 
 /************************************************************
-float
+Float
 ************************************************************/
-
-static float* floatptr_from_scalar(float scalar)
-{
-    float* ptr = malloc(sizeof(float));
-    *ptr = scalar;
-    return ptr;
-}
-
-static float* floatptr_from_ptr(float* ptr)
-{
-    return ptr;
-}
-
-#define floatptr_from(X) _Generic((X), \
-    float: floatptr_from_scalar, \
-    float*: floatptr_from_ptr, \
-    default: floatptr_from_scalar \
-    )(X)
-
-static float float_from_scalar(float scalar)
-{
-    return scalar;
-}
-
-static float float_from_ptr(const float* ptr)
-{
-    return *ptr;
-}
-
-#define float_from(X) _Generic((X), \
-    float: float_from_scalar, \
-    float*: float_from_ptr, \
-    default: float_from_scalar \
-    )(X)
 
 typedef struct {
     union {
@@ -99,7 +65,7 @@ Float Float_from_ptr(const float* ptr)
     )(X)
 
 /************************************************************
-char
+Char
 ************************************************************/
 
 typedef struct {
@@ -110,12 +76,12 @@ typedef struct {
     enum Type type;
 } Char;
 
-Char Char_from_scalar(char scalar)
+static Char Char_from_scalar(char scalar)
 {
     return (Char){ .scalar=scalar, Type_SCALAR };
 }
 
-Char Char_from_ptr(const char* ptr)
+static Char Char_from_ptr(const char* ptr)
 {
     return (Char){ .ptr=ptr, Type_PTR };
 }
@@ -127,7 +93,7 @@ Char Char_from_ptr(const char* ptr)
     )(X)
 
 /************************************************************
-bool
+Bool
 ************************************************************/
 
 typedef struct {
@@ -138,12 +104,12 @@ typedef struct {
     enum Type type;
 } Bool;
 
-Bool Bool_from_scalar(bool scalar)
+static Bool Bool_from_scalar(bool scalar)
 {
     return (Bool){ .scalar=scalar, Type_SCALAR };
 }
 
-Bool Bool_from_ptr(const bool* ptr)
+static Bool Bool_from_ptr(const bool* ptr)
 {
     return (Bool){ .ptr=ptr, Type_PTR };
 }
@@ -152,6 +118,54 @@ Bool Bool_from_ptr(const bool* ptr)
     bool: Bool_from_scalar, \
     bool*: Bool_from_ptr, \
     default: Bool_from_scalar \
+    )(X)
+
+/************************************************************
+Ptr_from
+************************************************************/
+
+static int* Ptr_from_int(int scalar)
+{
+    int* ptr = malloc(sizeof(int));
+    *ptr = scalar;
+    return ptr;
+}
+
+static float* Ptr_from_float(float scalar)
+{
+    float* ptr = malloc(sizeof(float));
+    *ptr = scalar;
+    return ptr;
+}
+
+static char* Ptr_from_char(char scalar)
+{
+    char* ptr = malloc(sizeof(char));
+    *ptr = scalar;
+    return ptr;
+}
+
+static bool* Ptr_from_bool(bool scalar)
+{
+    bool* ptr = malloc(sizeof(bool));
+    *ptr = scalar;
+    return ptr;
+}
+
+static void* Ptr_from_ptr(void* ptr)
+{
+    return ptr;
+}
+
+#define Ptr_from(X) _Generic((X), \
+    int: Ptr_from_int, \
+    float: Ptr_from_float, \
+    char: Ptr_from_char, \
+    bool: Ptr_from_bool, \
+    int*: Ptr_from_ptr, \
+    float*: Ptr_from_ptr, \
+    char*: Ptr_from_ptr, \
+    bool*: Ptr_from_ptr \
     )(X)
 
 #endif
