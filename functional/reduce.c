@@ -10,7 +10,7 @@ int add(int a, int b)
     return a + b;
 }
 
-char* concat(const char* a, char b)
+const char* concat(const char* a, char b)
 {
     char input[2] = {b, '\0'};
     size_t length = strlen(a) + 1;
@@ -28,26 +28,32 @@ bool or(bool a, bool b)
 int main()
 {
     {
-        reducer_t reducer = (reducer_t)add;
         int arr[] = { 1, 2, 3 };
-        struct container_t container = {arr, sizeof(arr), sizeof(int)};
-        generic_t res = reduce(reducer, 0, container);
-        printf("%ld\n", (uintptr_t)res); // 6
-    }
-    
-    {
-        reducer_t reducer = (reducer_t)concat;
-        char str[] = "ommy";
-        struct container_t container = {str, sizeof(str) - sizeof(char), sizeof(char)};
-        generic_t res = reduce(reducer, "T", container);
-        printf("%s\n", (char*)res); // Tommy
+        uintptr_t res = reduce(
+            /*reducer=*/(reducer_t)add,
+            /*initial=*/0,
+            /*input=*/(struct container_t){ .items=arr, .size=sizeof(arr), .itemsize=sizeof(int) }
+        );
+        printf("%ld\n", res); // 6
     }
 
     {
-        reducer_t reducer = (reducer_t)or;
+        char str[] = "ommy";
+        char* res = reduce(
+            /*reducer=*/(reducer_t)concat,
+            /*initial=*/"T",
+            /*input=*/(struct container_t){ .items=str, .size=sizeof(str)-sizeof(char), .itemsize=sizeof(char) }
+        );
+        printf("%s\n", res); // Tommy
+    }
+
+    {
         bool arr[] = { false, true, true };
-        struct container_t container = {arr, sizeof(arr), sizeof(bool)};
-        generic_t res = reduce(reducer, false, container);
-        printf("%s\n", (uintptr_t)res? "true" : "false");
+        uintptr_t res = reduce(
+            /*reducer=*/(reducer_t)or,
+            /*initial=*/false,
+            /*input=*/(struct container_t){ .items=arr, .size=sizeof(arr), .itemsize=sizeof(bool)}
+        );
+        printf("%s\n", res? "true" : "false"); // true
     }
 }
