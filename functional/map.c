@@ -19,26 +19,24 @@ char uppercase(char c)
 int main()
 {
     {
-        function_t fn = (function_t)times2;
         int arr[] = { 1, 2, 3 };
-        struct container_t container = {arr, sizeof(arr), sizeof(int)};
-        struct container_t res = map(fn, container);
+        struct container_t res = map(
+            (function_t)times2,
+            (struct container_t){ .items=arr, .size=sizeof(arr), .itemsize=sizeof(int) }
+        );
         for (size_t i = 0; i < res.size / res.itemsize; ++i)
-        {
             printf("%d ", ((int*)res.items)[i]); // 2 4 6
-        }
         printf("\n");
     }
 
     {
-        function_t fn = (function_t)uppercase;
         char str[] = "c0ol_";
-        struct container_t container = {str, sizeof(str), sizeof(char)};
-        struct container_t res = map(fn, container);
+        struct container_t res = map(
+            (function_t)uppercase,
+            (struct container_t){ .items=str, .size=sizeof(str), .itemsize=sizeof(char) }
+        );
         for (size_t i = 0; i < res.size / res.itemsize; ++i)
-        {
             printf("%c", ((char*)res.items)[i]); // C0OL_
-        }
         printf("\n");
     }
 }
