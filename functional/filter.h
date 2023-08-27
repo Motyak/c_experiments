@@ -11,11 +11,11 @@ typedef bool (*predicate_t)(generic_t);
 typedef struct container_t (*filterer_t)(struct container_t input);
 
 #define FILTERER_MAX_LENGTH 10
-static predicate_t* g_filterer = NULL;
-static int g_filterer_length = 0;
+static _Thread_local predicate_t* g_filterer = NULL;
+static _Thread_local int g_filterer_length = 0;
 
 // global variable used by update function, set by setup_update_function function
-static predicate_t g_update__predicate = NULL;
+static _Thread_local predicate_t g_update__predicate = NULL;
 
 // should be a lambda because of the pred bounded parameter
 // inject the predicate as a global variable that will be accessed by the update function, as if it was lexically bound through a closure (except we live in c world)
@@ -50,7 +50,7 @@ struct container_t filter(predicate_t pred, struct container_t input)
     reducer_t reducer = (reducer_t)update;
     setup_update_function(pred);
     struct container_t* acc = malloc(sizeof(struct container_t));
-    *acc = (struct container_t){NULL, 0, input.itemsize};
+    *acc = (struct container_t){ .items=NULL, .size=0, .itemsize=input.itemsize };
     return *(struct container_t*)reduce(reducer, acc, input);
 }
 
@@ -67,7 +67,7 @@ static struct container_t execute(struct container_t input)
     setup_update_function(always_true);
 
     struct container_t* res = malloc(sizeof(struct container_t));
-    *res = (struct container_t){NULL, 0, input.itemsize};
+    *res = (struct container_t){ .items=NULL, .size=0, .itemsize=input.itemsize };
     size_t length = input.size / input.itemsize;
     void** curr = NULL;
     for (size_t i = 0; i < length; ++i)
@@ -75,15 +75,11 @@ static struct container_t execute(struct container_t input)
         curr = input.items + i * input.itemsize;
         bool acc = true;
         for (int i = 0; i < g_filterer_length; ++i)
-        {
             acc &= g_filterer[i](*curr);
-        }
 
         // if all predicates returned true
         if (acc)
-        {
             res = (struct container_t*)update(res, *curr);
-        }
     }
 
     return *res;
