@@ -21,7 +21,7 @@ int main()
             /*input=*/(struct container_t){ .items=arr, .size=sizeof(arr), .itemsize=sizeof(int) }
         );
         for (size_t i = 0; i < res.size / res.itemsize; ++i)
-            printf("%d ", ((int*)res.items)[i]); // 1 3
+            printf("%d ", ((int*)res.items)[i]); // 1 3 
         printf("\n");
     }
 
