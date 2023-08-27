@@ -21,23 +21,23 @@ int decrement(int n)
 int main()
 {
     {
-        function_t first = (function_t)increment;
-        function_t second = (function_t)square;
-        function_t third = (function_t)decrement;
-        
-        pipeline_t inc_then_double_then_dec = pipe(first, second, third);
+        pipeline_t inc_then_double_then_dec = pipe(
+            (function_t)increment,
+            (function_t)square,
+            (function_t)decrement
+        );
         generic_t input = (generic_t)9;
-        generic_t res = inc_then_double_then_dec(input);
-        printf("%ld\n", (uintptr_t)res); // 99
+        uintptr_t res = inc_then_double_then_dec(input);
+        printf("%ld\n", res); // 99
     }
 
     {
-        function_t first = (function_t)increment;
-        function_t second = (function_t)increment;
-        
-        pipeline_t next_next_char = pipe(first, second);
+        pipeline_t next_next_char = pipe(
+            (function_t)increment,
+            (function_t)increment
+        );
         generic_t input = (generic_t)'A';
-        generic_t res = next_next_char(input);
-        printf("%c\n", (char)(uintptr_t)res); // C
+        uintptr_t res = next_next_char(input);
+        printf("%c\n", (char)res); // C
     }
 }

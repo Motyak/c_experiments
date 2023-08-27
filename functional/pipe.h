@@ -14,18 +14,15 @@ typedef generic_t (*function_t)(generic_t);
 typedef generic_t (*pipeline_t)(generic_t);
 
 #define PIPELINE_MAX_LENGTH 10
-static function_t* g_pipeline = NULL;
-static int g_pipeline_length = 0;
-
+static _Thread_local function_t* g_pipeline = NULL;
+static _Thread_local int g_pipeline_length = 0;
 
 static generic_t execute(generic_t input)
 {
     assert(g_pipeline != NULL);
     generic_t res = input;
     for (int i = 0; i < g_pipeline_length; ++i)
-    {
         res = g_pipeline[i](res);
-    }
     return res;
 }
 
