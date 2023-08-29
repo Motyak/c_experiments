@@ -33,7 +33,7 @@ int main()
     float* res = reduce(
         /*reducer=*/(reducer_t)add,
         /*initial=*/(generic_t)Ptr_from(0.0f),
-        /*input=*/(struct container_t){ .items=input, .size=sizeof(input) }
+        /*input=*/Container_of(input)
     );
     printf("%f\n", *res); // 12.000000
 }
