@@ -47,11 +47,13 @@ static struct container_t* update(struct container_t* list, generic_t curr)
 
 struct container_t filter(predicate_t pred, struct container_t input)
 {
-    reducer_t reducer = (reducer_t)update;
     setup_update_function(pred);
     struct container_t* acc = malloc(sizeof(struct container_t));
     *acc = (struct container_t){ .items=NULL, .size=0, .itemsize=input.itemsize };
-    return *(struct container_t*)reduce(reducer, acc, input);
+    return *(struct container_t*)reduce(
+        /*reducer=*/(reducer_t)update,
+        /*initial=*/acc,
+        /*input=*/input);
 }
 
 // temporary hack to bypass pred check in update (force update)

@@ -36,9 +36,9 @@ struct container_t map(function_t fn, struct container_t input)
     struct container_t* acc = malloc(sizeof(struct container_t));
     *acc = (struct container_t){ .items=NULL, .size=0, .itemsize=input.itemsize };
     return *(struct container_t*)reduce(
-        (reducer_t)add,
-        acc,
-        input
+        /*reducer=*/(reducer_t)add,
+        /*initial=*/acc,
+        /*input=*/input
     );
 }
 
